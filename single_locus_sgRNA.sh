@@ -285,22 +285,22 @@ mkdir -p ~/data/projects/BRIC_data/single_locus/macs2/differential_NC_only
 
 screen -R tracks
 # no second replicate for inputs
-# by mistake called the final file "input" --> not input but IP!
-for rep in rep2; do
-	macs2 callpeak -B -t bam/DE2-IP-${rep}.bam -c bam/DE2-input-rep1.bam -n DE2-input-${rep} --outdir macs2/differential --nomodel --extsize 200
-	macs2 callpeak -B -t bam/NC-IP-${rep}.bam -c bam/NC-input-rep1.bam -n NC-input-${rep} --outdir macs2/differential --nomodel --extsize 200
+for rep in rep1 rep2; do
+	macs2 callpeak -B -t bam/NC-IP-${rep}.bam -c bam/NC-input-rep1.bam -n NC-${rep} --outdir macs2/differential_NC_only --nomodel --extsize 200
 done
 
 # differential peak calling
 # need to know number of tags after filtering
 
-tags1=11681290 # for DE2
-tags2=8730593 # for NC
-folder=macs2/differential
+tags1=8730593 # for NC rep1
+tags2=12642723 # for NC rep 2
+folder=macs2/differential_NC_only
+label1=NC-rep1
+label2=NC-rep2
 # -g and -l parameters left unchanged
-macs2 bdgdiff --t1 $folder/DE2-input-rep1_treat_pileup.bdg --c1 $folder/DE2-input-rep1_control_lambda.bdg \
- --t2 $folder/NC-input-rep1_treat_pileup.bdg --c2 $folder/NC-input-rep1_control_lambda.bdg \
- --d1 $tags1 --d2 $tags2 -g 60 -l 120 --o-prefix $folder/diff_DE2-IP-rep1_vs_NC-IP-rep1
+macs2 bdgdiff --t1 $folder/${label1}_treat_pileup.bdg --c1 $folder/${label1}_control_lambda.bdg \
+ --t2 $folder/${label2}_treat_pileup.bdg --c2 $folder/${label2}_control_lambda.bdg \
+ --d1 $tags1 --d2 $tags2 -g 60 -l 120 --o-prefix $folder/diff_NC-rep1_vs_NC-rep2
 
 
 
